@@ -5,4 +5,4 @@ services:
   enviroment:
     ESPHOME_SERVER_URL: http://example.com or https://example.com or wss://example.com #write the url to your esphomeserver here
   ports:
-    - 8001
+    - "8001:8001"
