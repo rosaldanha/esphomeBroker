@@ -5,11 +5,7 @@ from websockets import connect, serve
 import re, yaml, json
 from urllib.parse import urlparse
 
-# export enum STATUS {
-#     RUNNING = "running",
-#     STOPED = "stoped",
-#     DONE = "done"
-# }
+
 
 def getWsUrl(commonUrl:str) -> str:
     urlParsed = urlparse(commonUrl)
@@ -65,8 +61,11 @@ async def handler(websocket):
             while True:
                 message = await websocketClient.recv()   
                 messageObject =json.loads(message)  
-                dataStr = messageObject["data"]  
                 print(message)
+                if messageObject["event"] == 'line':
+                    dataStr = messageObject["data"]
+                if messageObject["event"]=='exit':
+                    dataStr = "ERROR"
                 if dataStr.find("Reading configuration") > -1:                    
                     await websocket.send(getEvtRunning("config",currentDevice)) # reading config
                 if dataStr.find("Compiling") > -1:
