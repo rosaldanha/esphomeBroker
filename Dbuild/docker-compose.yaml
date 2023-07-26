@@ -1,0 +1,3 @@
+services:
+  esphomebroker:
+    build: https://github.com/rosaldanha/esphomeBroker.git#main:Dbuild
