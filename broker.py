@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 import asyncio
-#import websockets
 from websockets import connect, serve
-import re, yaml, json
+import re, json, os
+from dotenv import load_dotenv
 from urllib.parse import urlparse
 
 
 
-def getWsUrl(commonUrl:str) -> str:
-    urlParsed = urlparse(commonUrl)
+def getWsUrl() -> str:
+    urlParsed = urlparse(os.getenv('ESPHOME_SERVER_URL'))
     if urlParsed.scheme == 'https':
         RETURN_PROTOCOL = 'wss'
     else:
@@ -20,10 +20,10 @@ def getWsUrl(commonUrl:str) -> str:
         RETURN_PORT = ''
     return f"{RETURN_PROTOCOL}://{urlParsed.hostname}{RETURN_PORT}{RETURN_PATH}"
 
-def loadConfig() :
-    with open('config.yml', 'r') as file:
-        prime_service = yaml.safe_load(file)
-    return prime_service
+# def loadConfig() :
+#     with open('config.yml', 'r') as file:
+#         prime_service = yaml.safe_load(file)
+#     return prime_service
 def getEvtDone(type:str, device:str ):
     return json.dumps({
         "type":type,
@@ -54,7 +54,7 @@ async def handler(websocket):
             currentDevice = messageObject["configuration"].split('.')[0]
         print('vou conectar o esphome aqui')
         await asyncio.sleep(0)
-        WS_URL = getWsUrl(CONFIG["server"]["url"])
+        WS_URL = getWsUrl()
         async with connect(WS_URL) as websocketClient:
             print('Conectado no esphome')
             await websocketClient.send(message)
@@ -107,5 +107,7 @@ async def main():
 
 
 if __name__ == "__main__":
-    CONFIG = loadConfig()
+    
+    load_dotenv()
+    
     asyncio.run(main())
