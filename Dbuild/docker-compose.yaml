@@ -2,7 +2,7 @@
 services:
   esphomebroker:
     build: https://github.com/rosaldanha/esphomeBroker.git#main:Dbuild
-  enviroment:
+  environment:
     ESPHOME_SERVER_URL: http://example.com or https://example.com or wss://example.com #write the url to your esphomeserver here
   ports:
     - "8001:8001"
